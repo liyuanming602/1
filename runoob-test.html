@@ -1,0 +1,78 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>微信下雪效果</title>
+    <style>
+        body {
+            margin: 0;
+            overflow: hidden;
+            background: #000;
+        }
+        .snowflake {
+            position: absolute;
+            color: #fff;
+            opacity: 0.8;
+            font-size: 12px;
+            pointer-events: none;
+        }
+    </style>
+</head>
+
+<body>
+    <script>
+        // 雪花数量
+        const snowflakeCount = 190;
+        // 生成雪花
+        function createSnowflakes() {
+            for (let i = 0; i < snowflakeCount; i++) {
+                const snowflake = document.createElement('div');
+                snowflake.className = 'snowflake';
+                snowflake.innerHTML = '❄';
+                // 随机位置
+                snowflake.style.left = `${Math.random() * 150}%`;
+                snowflake.style.top = `${Math.random() * -150}px`;
+                // 随机大小和透明度
+                const size = Math.random() * 32 + 25;
+                snowflake.style.fontSize = `${size}px`;
+                snowflake.style.opacity = Math.random() * 0.1 + 0.5;
+                // 随机下落速度
+                const speed = Math.random() * 1 + 0.1;
+                snowflake.setAttribute('data-speed', speed);
+                // 随机摆动幅度
+                const swing = Math.random() * 0.01+ 0.01;
+                snowflake.setAttribute('data-swing', swing);
+                document.body.appendChild(snowflake);
+            }
+        }
+        // 雪花下落动画
+        function animateSnowflakes() {
+            const snowflakes = document.querySelectorAll('.snowflake');
+            snowflakes.forEach(snowflake => {
+                const speed = parseFloat(snowflake.getAttribute('data-speed'));
+                const swing = parseFloat(snowflake.getAttribute('data-swing'));
+                const currentTop = parseFloat(snowflake.style.top) || 0;
+                const currentLeft = parseFloat(snowflake.style.left) || 0;
+                // 计算新的位置
+                const newTop = currentTop + speed;
+                const newLeft = currentLeft + Math.sin(newTop / 50) * swing;
+                // 如果雪花超出屏幕，重置位置
+                if (newTop > window.innerHeight) {
+                    snowflake.style.top = '-10px';
+                    snowflake.style.left = `${Math.random() * 100}%`;
+                } else {
+                    snowflake.style.top = `${newTop}px`;
+                    snowflake.style.left = `${newLeft}%`;
+                }
+            });
+            requestAnimationFrame(animateSnowflakes);
+        }
+        // 初始化
+        createSnowflakes();
+        animateSnowflakes();
+    </script>
+</body>
+
+</html>
